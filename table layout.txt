@@ -1,0 +1,67 @@
+                    <table className="min-w-full bg-white">
+                        <thead>
+                            <tr>
+                                
+                                <th className="px-4 py-2 bg-gray-200 text-gray-600 border-b border-gray-300 text-left text-sm uppercase font-semibold">
+                                    Title
+                                </th>
+                                <th className="px-4 py-2 bg-gray-200 text-gray-600 border-b border-gray-300 text-left text-sm uppercase font-semibold">
+                                    Description
+                                </th>
+                                <th className="px-4 py-2 bg-gray-200 text-gray-600 border-b border-gray-300 text-left text-sm uppercase font-semibold">
+                                    Created At
+                                </th>
+                                <th className="px-4 py-2 bg-gray-200 text-gray-600 border-b border-gray-300 text-left text-sm uppercase font-semibold">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.length > 0 ? (
+                                data.map(({ id, title, description, created_at }) => (
+                                    <tr key={id}>
+                                        
+                                        <td className="px-4 py-2 border-b border-gray-300">
+                                            {title}
+                                        </td>
+                                        <td className="px-4 py-2 border-b border-gray-300">
+                                            {description}
+                                        </td>
+                                        <td className="px-4 py-2 border-b border-gray-300">
+                                            {new Date((created_at)).toLocaleDateString('id-ID')}
+                                        </td>
+
+                                        <td className="px-4 py-2 border-b border-gray-300">
+                                        <Link 
+                                                className="bg-slate-400 hover:bg-slate-600 text-black font-bold py-1 px-2 rounded text-xs mr-1"
+                                                href={route("posts.show", id)}
+                                            >
+                                                Show
+                                            </Link>
+                                            <Link 
+                                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs mr-1"
+                                                href={route("posts.edit", id)}
+                                            >
+                                                Edit
+                                            </Link>
+                                            <button 
+                                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-xs"
+                                                onClick={() => handleDelete(id)} // Trigger delete function
+                                            >
+                                                Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td
+                                        className="px-4 py-2 border-b border-gray-300"
+                                        colSpan="4"
+                                    >
+                                        No posts found.
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>

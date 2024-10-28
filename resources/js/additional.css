@@ -1,0 +1,10 @@
+/* I know I should do better at importing files :P */
+
+#description {
+    white-space: pre-wrap; /* or pre-line */
+}
+
+.toast-hidden {
+    opacity: 0;
+    transition: all 250ms linear 2s;
+}
