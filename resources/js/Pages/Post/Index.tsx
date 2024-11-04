@@ -15,6 +15,7 @@ interface Post {
     title: string;
     description: string;
     created_at: string;
+    published_at: string;
     categories: Category[];
 }
 
@@ -83,16 +84,21 @@ const Index = ({ auth }: PageProps) => {
                 {/* card reference: https://flowbite.com/docs/components/card/# */}
                     <div className="grid gap-5 lg:grid-cols-2">
                     {data.length > 0 ? (
-                        data.map(({ id, title, description, created_at, categories }) => (
+                        data.map(({ id, title, description, created_at, published_at, categories }) => (
                             <Link className="w-full border border-gray-200 bg-white hover:bg-slate-50 rounded-lg shadow-md lg:max-w-xl" href={route("posts.show", id)} key={id}>
                             <div className="p-5">
-                                <p className="font-thin text-sm text-gray-700">{new Date(created_at).toLocaleDateString("id-ID")}
+                                <p className="font-thin text-sm text-gray-700">{new Date(published_at).toLocaleDateString("id-ID")}
                                 {/* Display the categories */}
                                     {categories.length >= 0 ? (
                                         categories.map((category) => (
-                                            <span key={category.id} className="p-1 mx-1 bg-slate-200 rounded">
+                                            <Link
+                                                href={route('categories.posts', category.id)} // URL untuk kategori
+                                                className="text-gray-600"
+                                                key={category.id}>
+                                            <span key={category.id} className="p-1 mx-1 bg-slate-200 rounded hover:bg-slate-300">
                                                 {category.categories}
                                             </span>
+                                            </Link>
                                         ))
                                     ) : (
                                         <span></span>

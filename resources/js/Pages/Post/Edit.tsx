@@ -9,6 +9,7 @@ interface Post {
     id: number;
     title: string;
     description: string;
+    published_at: string;
     updated_at: string;
     categories: string;
 }
@@ -16,6 +17,18 @@ interface Post {
 interface FormErrors {
     title?: string;
     description?: string;
+    published_at?: string;
+}
+
+function formatDateToUK(datetime) {
+    const date = new Date(datetime);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
 const Edit = ({ auth }: PageProps) => {
@@ -24,7 +37,9 @@ const Edit = ({ auth }: PageProps) => {
         title: post.title || "",
         description: post.description || "",
         updated_at: post.updated_at || "",
-        categories: post.categories || ""
+        categories: post.categories || "",
+        // published_at: post.published_at ? post.published_at.substring(0, 16) : ""
+        published_at: post.published_at ? formatDateToUK(post.published_at) : "",
     });
     const [categoryInput, setCategoryInput] = useState(post.categories || '');
     const handleInputChange = (e) => {
@@ -32,12 +47,18 @@ const Edit = ({ auth }: PageProps) => {
         setData('categories', e.target.value);
     };
 
+    useEffect(() => { 
+        if (!data.published_at) { 
+            const now = new Date();
+            const formattedDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}T${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            setData('published_at', formattedDate);
+        } 
+    }, []);
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         put(route("posts.update", post.id));
     }
-
     function destroy() {
         if (confirm("Apakah Anda yakin ingin menghapus post ini?")) {
             router.delete(route("posts.destroy", post.id));
@@ -114,11 +135,21 @@ const Edit = ({ auth }: PageProps) => {
                                     value={categoryInput}
                                     onChange={handleInputChange}
                                 />
-                                {errors.title && (
+                                {errors.categories && (
                                     <span className="text-red-600 text-sm">
-                                        {errors.title}
+                                        {errors.categories}
                                     </span>
                                 )}
+                            </div>
+                            <label htmlFor="published_at" className="block text-gray-700">Published Date</label>
+                            <input 
+                                type="datetime-local"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                                value={data.published_at} 
+                                onChange={(e) => 
+                                    setData('published_at', e.target.value)} 
+                            />
+                            <div>
                             </div>
                         </div>
                         <div className="flex justify-between mt-6">

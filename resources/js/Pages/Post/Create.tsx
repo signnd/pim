@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, usePage, useForm, router } from "@inertiajs/react";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { PageProps } from '@/types';
@@ -9,19 +9,22 @@ interface FormData {
     title: string;
     description: string;
     categories: string;
+    published_at: string;
 }
 
 interface FormErrors {
     title?: string;
     description?: string;
     categories?: string;
+    published_at?: string;
 }
 
 const Create = ({ auth }: PageProps) => {
     const { data, setData, errors, post, } = useForm<FormData>({
         title: "",
         description: "",
-        categories: ""
+        categories: "",
+        published_at: ""
     });
 
     //const [categoryInput, setCategoryInput] = useState(post.categories || '');
@@ -29,6 +32,14 @@ const Create = ({ auth }: PageProps) => {
         //setCategoryInput(e.target.value);
         setData('categories', e.target.value);
     };
+
+    useEffect(() => { 
+        if (!data.published_at) { 
+            const now = new Date();
+            const formattedDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}T${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            setData('published_at', formattedDate);
+        } 
+    }, []);
 
 
     // Handle form submission
@@ -93,7 +104,7 @@ const Create = ({ auth }: PageProps) => {
                                         </span>
                                     )}
                                 </div>
-                                <div>
+                                <div className="mb-4">
                                 <label htmlFor="category" className="block text-gray-700">Add Category</label>
                                 <input
                                     type="text"
@@ -108,6 +119,18 @@ const Create = ({ auth }: PageProps) => {
                                         {errors.title}
                                     </span>
                                 )}
+                            </div>
+                            <div className="mb-4">
+                            <label htmlFor="published_at" className="block text-gray-700">Published Date</label>
+                            <input 
+                                type="datetime-local" 
+                                className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                                value={data.published_at} 
+                                onChange={(e) => 
+                                    setData('published_at', e.target.value)} 
+                            />
+                            </div>
+                            <div>
                             </div>
                             <div className="pt-5">
                                 <button

@@ -12,6 +12,7 @@ interface Post {
     description: string;
     updated_at: string;
     created_at: string;
+    published_at: string;
     categories: string;
 }
 
@@ -28,6 +29,7 @@ const Edit = ({ auth }: PageProps) => {
         description: post.description || "",
         updated_at: post.updated_at || "",
         created_at: post.created_at || "",
+        published_at: post.published_at || "",
         categories: post.categories || ""
     });
     console.log(post);
@@ -88,15 +90,14 @@ const Edit = ({ auth }: PageProps) => {
                             </div>
                             <div>
                                 <p id="categories" className="w-full text-lg font-light">
-                            {/* todo: bug: nama category belum muncul, sementara simpen kode dari chatgpt */}
                 {post.categories && post.categories.length > 0 ? (
                     post.categories.map((category) => (
                         <Link
                             href={route('categories.posts', category.id)} // URL untuk kategori
                             key={category.id}
-                            className="text-blue-500 hover:underline"
+                            className="text-gray-800"
                         >
-                        <span key={category.id} className="p-2 mr-3 bg-slate-200 rounded">
+                        <span key={category.id} className="p-2 mr-3 bg-slate-200 rounded hover:bg-slate-300">
                             {category.categories}
                         </span>
                         </Link>
@@ -106,8 +107,10 @@ const Edit = ({ auth }: PageProps) => {
                 )}
                                 </p>
                             </div>
-                        <p className="font-thin text-sm text-gray-700">Created at {new Date(data.created_at).toLocaleString("id-ID")}</p>
-                        <p className="font-thin text-sm text-gray-700">Last modified {new Date(data.updated_at).toLocaleString("id-ID")}</p>
+                        <p className="font-thin text-sm text-gray-700">
+                            Created at {new Date(data.published_at).toLocaleString("en-UK", {weekday: "short", year: "numeric", month: "short", day: "numeric", hour: 'numeric', minute: 'numeric'})}</p>
+                        <p className="font-thin text-sm text-gray-700">
+                            Last modified {new Date(data.updated_at).toLocaleString("en-UK", {weekday: "short", year: "numeric", month: "short", day: "numeric", hour: 'numeric', minute: 'numeric'})}</p>
                     </div>
                 </div>
             </div>

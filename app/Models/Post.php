@@ -12,7 +12,7 @@ class Post extends Model
     const EXCERPT_LENGTH = 300;
 
     protected $fillable = [
-        'title', 'description', 'categories', 'created_at', 'updated_at'
+        'title', 'description', 'categories', 'created_at', 'updated_at', 'published_at'
     ];
 
     public function excerpt() {
@@ -22,6 +22,17 @@ class Post extends Model
     public function categories(): BelongsToMany {
         return $this->belongsToMany(Category::class, 'post_category');
     }
+
+    // disuruh nambahin sama microsoft copilot
+    
+    // protected static function boot() { 
+    //     parent::boot();
+    //     static::creating(function ($post) { 
+    //         if (is_null($post->published_at)) { 
+    //             $post->published_at = now(); 
+    //         } 
+    //     }); 
+    // }
 
     use HasFactory;
 }

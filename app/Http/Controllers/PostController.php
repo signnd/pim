@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StorePostRequest;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
-use Illuminate\Support\Str;
 use App\Http\Controllers\CategoryController;
 use App\Models\Category;
+use Illuminate\Support\Carbon;
 
 class PostController extends Controller
 {
@@ -71,6 +71,7 @@ class PostController extends Controller
                'title' => $post->title,
                'description' => $post->description,
                'created_at' => $post->created_at,
+               'published_at' => $post->published_at,
                'updated_at' => $post->updated_at,
                'categories' => $categories,
             ],
@@ -90,6 +91,8 @@ class PostController extends Controller
                 'title' => $post->title,
                 'description' => $post->description,
                 'updated_at' => $post->updated_at,
+                'created_at' => $post->created_at,
+                'created_at' => $post->created_at,
                 'categories' => implode(', ', $categories)
             ]
         ]);
@@ -100,7 +103,13 @@ class PostController extends Controller
      */
     public function update(StorePostRequest $request, Post $post)
     {
-        $post->update($request->only(['title', 'description']));
+        $post->update($request->only(['title', 'description', 'published_at']));
+        if (is_null($request->input('published_at'))) {
+            $data['published_at'] = now()->format('Y-m-d H:i:s'); 
+        } else { 
+            $data['published_at'] = Carbon::parse($request->input('published_at'))->format('Y-m-d H:i:s'); 
+        }
+
         if ($request->has('categories') && !empty(trim($request->categories))) {
             $categoryInput = explode(', ', $request->categories); // Memecah input berdasarkan koma
             $categoryIds = [];

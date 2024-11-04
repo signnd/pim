@@ -24,7 +24,8 @@ class UpdatePostRequest extends FormRequest
         return [
             'title' => 'nullable|string',
             'description' => 'nullable',
-            'category' => 'nullable|string'
+            'category' => 'nullable|string',
+            'published_at' => 'nullable'
         ];
     }
 }
